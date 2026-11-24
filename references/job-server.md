@@ -14,7 +14,7 @@ what those pages leave implicit.
     failedMailRecipients="someone@example.com">
   <fileTrigger>
     <incomingFolder value="\\server\share\queue\machine\in" />
-    <outputFolder   value="\\server\share\out" />
+    <outputFolder   value="\\server\share\out" />      <!-- literal path: NO formulas -->
     <failedFolder   value="\\server\share\error" />
     <filter value="*.json" />
   </fileTrigger>
@@ -58,7 +58,7 @@ what those pages leave implicit.
 ## Workers and orchestration
 
 - **Count the workers first** (`GET /api/workers`). With one worker, a parent job that waits for its child
-  jobs deadlocks,动员 because it occupies the only worker. Design parents that *dispatch and finish*: they
+  jobs deadlocks, because it occupies the only worker. Design parents that *dispatch and finish*: they
   write one input file per child into the queue folders.
 - **Each job's project is generated in the worker's local workspace**
   (`…\EEC\<version>\workspace\<Project>\<random>\…`). It is copied to `<outputFolder>\<jobName>\results` only
@@ -84,7 +84,7 @@ When several jobs must agree on something, such as "the last machine of a batch 
 |---|---|
 | `POST /api/jobs/request/<recipe>` + JSON body | Start a web-service-triggered job. Returns `id` and `status: Queued` |
 | `GET /api/jobs/<id>` | `status`, `jobName`, `executedOnWorker` |
-| `GET /api/jobs` | `{ totalSize, jobs: [...] }` — filter by jobName prefix client-side |
+| `GET /api/jobs` | `{ totalSize, jobs: [...] }` — filter by `jobName` prefix client-side |
 | `GET /api/logs` | All log trees: `jobId`, `logGroup`, `message`, `startTime`/`endTime` (ms), `children` |
 | `GET /api/workers` | Worker list |
 
